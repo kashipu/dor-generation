@@ -1,4 +1,4 @@
-# Escuela de Liderazgo: DoR Orchestrator & Testing Protocol
+# DoR Orchestrator & Testing Protocol
 
 Este proyecto es una herramienta avanzada diseñada para estructurar planes de investigación (Definition of Ready - DoR) y generar protocolos de testeo automáticos de forma profesional y colaborativa.
 
