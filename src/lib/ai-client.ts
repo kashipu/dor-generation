@@ -180,9 +180,15 @@ Responde ÚNICAMENTE con el objeto JSON.`;
     const response = await result.response;
     const text = response.text();
     const usage = response.usageMetadata;
-    
+
+    console.log("DoR Suggestions raw response:", text);
+
     const cleanJson = text.replace(/```json|```/g, "").trim();
-    return { suggestions: JSON.parse(cleanJson), usage };
+    const parsed = JSON.parse(cleanJson);
+
+    console.log("DoR Suggestions parsed:", JSON.stringify(parsed, null, 2));
+
+    return { suggestions: parsed, usage };
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown AI error";
     console.error("Error generating DoR suggestions", error);
