@@ -47,7 +47,7 @@ export async function generateResponse(
   history: ChatHistoryItem[] = []
 ) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-flash-lite-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
     
     const systemPrompt = await loadPrompt(agentId, "system");
     const stepPrompt = await loadPrompt(agentId, stepId);
@@ -101,7 +101,7 @@ export async function generateResponse(
 
 export async function generateTestingSuggestions(dorContext: string, currentTestContext?: string) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-flash-lite-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
     const systemPrompt = await loadPrompt("dor", "system");
     
     const fullPrompt = `${systemPrompt}
@@ -154,7 +154,7 @@ Responde ÚNICAMENTE con el objeto JSON.`;
 
 export async function generateDoRStepSuggestions(contextAndJustification: string) {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-flash-lite-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-lite" });
     const systemPrompt = await loadPrompt("dor", "system");
     
     const fullPrompt = `${systemPrompt}
