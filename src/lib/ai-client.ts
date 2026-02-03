@@ -2,7 +2,18 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import fs from "fs/promises";
 import path from "path";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const apiKey = process.env.GEMINI_API_KEY;
+
+if (!apiKey) {
+  console.error(
+    "\n❌ ERROR: GEMINI_API_KEY no está configurada.\n" +
+    "Por favor, crea un archivo .env.local en la raíz del proyecto con:\n\n" +
+    "  GEMINI_API_KEY=tu_api_key_aqui\n\n" +
+    "Puedes obtener tu API key en: https://aistudio.google.com/apikey\n"
+  );
+}
+
+const genAI = new GoogleGenerativeAI(apiKey || "");
 
 export async function loadPrompt(agentId: string, stepId: string): Promise<string> {
   const promptPath = path.join(process.cwd(), "prompts", agentId, `${stepId}.md`);
@@ -72,11 +83,18 @@ export async function generateResponse(
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown AI error";
     console.error("AI Generation Error details:", error);
-    
+
+    if (errorMessage.includes("403") || errorMessage.includes("unregistered callers")) {
+      throw new Error(
+        "API Key no válida o no configurada. " +
+        "Asegúrate de tener GEMINI_API_KEY en tu archivo .env.local"
+      );
+    }
+
     if (errorMessage.includes("404") || errorMessage.includes("not found")) {
       throw new Error(`Model not found or unavailable. Trace: ${errorMessage}`);
     }
-    
+
     throw new Error(errorMessage);
   }
 }
@@ -119,8 +137,17 @@ Responde ÚNICAMENTE con el objeto JSON.`;
     
     const cleanJson = text.replace(/```json|```/g, "").trim();
     return { suggestions: JSON.parse(cleanJson), usage };
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown AI error";
     console.error("Error generating suggestions", error);
+
+    if (errorMessage.includes("403") || errorMessage.includes("unregistered callers")) {
+      throw new Error(
+        "API Key no válida o no configurada. " +
+        "Asegúrate de tener GEMINI_API_KEY en tu archivo .env.local"
+      );
+    }
+
     throw error;
   }
 }
@@ -156,8 +183,17 @@ Responde ÚNICAMENTE con el objeto JSON.`;
     
     const cleanJson = text.replace(/```json|```/g, "").trim();
     return { suggestions: JSON.parse(cleanJson), usage };
-  } catch (error) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : "Unknown AI error";
     console.error("Error generating DoR suggestions", error);
+
+    if (errorMessage.includes("403") || errorMessage.includes("unregistered callers")) {
+      throw new Error(
+        "API Key no válida o no configurada. " +
+        "Asegúrate de tener GEMINI_API_KEY en tu archivo .env.local"
+      );
+    }
+
     throw error;
   }
 }
